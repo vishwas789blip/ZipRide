@@ -1,76 +1,110 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserDataContext } from '../context/userContext';
-
+import axios from 'axios';
 
 export default function UserLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { User , setUser } = useContext(UserDataContext);
+  const { setUser } = useContext(UserDataContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Basic Validation
-    if (!email || !password) return setError('All fields are required');
+    setError('');
 
-    // Filhaal ke liye hum bina backend ke data console kar rahe hain
-    console.log("Logging in with:", { email, password });
+    if (!email || !password) return setError('All fields are required.');
 
-    // Yahan hum context update kar sakte hain login success par
-    setUser({ email, fullName: { firstName: 'Vansh', lastName: '' } });
-
-    // Reset fields and navigate
-    setEmail('');
-    setPassword('');
-    navigate('/'); // Ya phir '/home'
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/login`,
+        { email, password }
+      );
+      if (response.status === 200) {
+        setUser(response.data);
+        localStorage.setItem('user', response.data.token);
+        setEmail('');
+        setPassword('');
+        navigate('/home');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    }
   };
 
   return (
-    <div className="p-7 h-screen flex flex-col justify-between max-w-md mx-auto">
+    <div className='p-7 h-screen flex flex-col justify-between bg-white max-w-md mx-auto'>
       <div>
-        <Link to="/" className="text-3xl font-bold italic tracking-tighter mb-10 block">ZipRide</Link>
 
-        <form onSubmit={handleSubmit}>
-          <h1 className="text-2xl font-bold mb-6">Welcome back</h1>
-          
-          {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+        {/* Brand Header */}
+        <div className='flex items-center gap-2 mb-8'>
+          <div className='w-9 h-9 bg-[#111] rounded-lg flex items-center justify-center'>
+            <span className='text-[#d5622d] font-bold text-sm'>Z</span>
+          </div>
+          <h1 className='text-xl font-medium'>
+            Zip<span className='text-[#d5622d]'>Ride</span>
+          </h1>
+        </div>
 
-          <h3 className='text-lg font-medium mb-2'>What's your email?</h3>
-          <input
-            required
-            value={email}
-            onChange={(e) => { setEmail(e.target.value); setError(''); }}
-            className='bg-[#eeeeee] mb-7 rounded px-4 py-2 border w-full text-lg placeholder:text-base'
-            type="email"
-            placeholder='email@example.com'
-          />
+        <h2 className='text-2xl font-medium mb-1'>Welcome back</h2>
+        <p className='text-sm text-gray-500 mb-6'>Sign in to your account</p>
 
-          <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
-          <input
-            required
-            value={password}
-            onChange={(e) => { setPassword(e.target.value); setError(''); }}
-            className='bg-[#eeeeee] mb-7 rounded px-4 py-2 border w-full text-lg placeholder:text-base'
-            type="password"
-            placeholder='password'
-          />
+        {/* Error Banner */}
+        {error && (
+          <div className='bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg mb-5'>
+            {error}
+          </div>
+        )}
 
-          <button className='bg-[#111] text-white font-semibold mb-3 rounded px-4 py-2 w-full text-lg active:scale-95 transition-all'>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-600 mb-1.5'>Email</label>
+            <input
+              required
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              className='bg-gray-100 rounded-lg px-4 py-2.5 border border-gray-200 w-full text-base placeholder:text-gray-400 focus:outline-none focus:border-gray-400 transition-colors'
+              type='email'
+              placeholder='email@example.com'
+            />
+          </div>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-600 mb-1.5'>Password</label>
+            <input
+              required
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(''); }}
+              className='bg-gray-100 rounded-lg px-4 py-2.5 border border-gray-200 w-full text-base placeholder:text-gray-400 focus:outline-none focus:border-gray-400 transition-colors'
+              type='password'
+              placeholder='••••••••'
+            />
+          </div>
+
+          <button
+            type='submit'
+            className='bg-[#111] text-white font-medium rounded-lg px-4 py-3 w-full text-base mt-1 hover:bg-[#333] transition-colors'
+          >
             Login
           </button>
+
         </form>
 
-        <p className='text-center'>New here? <Link to='/signup' className='text-blue-600 font-medium'>Create new Account</Link></p>
+        <p className='text-center text-sm text-gray-500 mt-5'>
+          New here?{' '}
+          <Link to='/signup' className='text-[#d5622d] font-medium hover:underline'>
+            Create an account
+          </Link>
+        </p>
       </div>
 
-      <div className='pb-5'>
+      <div className='border-t border-gray-100 pt-5'>
         <Link
-          to='/captain/login'
-          className='bg-[#10b461] flex items-center justify-center text-white font-semibold rounded px-4 py-2 w-full text-lg'
+          to='/captain-login'
+          className='bg-[#d5622d] flex items-center justify-center text-white font-medium rounded-lg px-4 py-3 w-full text-base hover:bg-[#c0541f] transition-colors'
         >
           Sign in as Captain
         </Link>
