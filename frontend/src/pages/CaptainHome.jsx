@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import CaptainRidePopUp from "../components/CaptainRidePopUp";
 
-const CaptainHome = ({ captain = {}, onNewRide }) => {
+const CaptainHome = ({ captain = {} }) => {
   const [isOnline, setIsOnline] = useState(true);
+
+  const [showRidePopup, setShowRidePopup] = useState(false);
+  const [ride, setRide] = useState(null);
 
   const {
     firstName = "Rahul",
@@ -124,16 +128,6 @@ const CaptainHome = ({ captain = {}, onNewRide }) => {
 
         </div>
 
-        {/* New Ride Button */}
-        {isOnline && (
-          <button
-            onClick={onNewRide}
-            className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 rounded-2xl mb-6 transition"
-          >
-            🚕 Simulate New Ride Request
-          </button>
-        )}
-
         {/* Recent Trips */}
         <div className="bg-white rounded-2xl shadow-sm p-4">
 
@@ -223,6 +217,6 @@ const CaptainHome = ({ captain = {}, onNewRide }) => {
 
     </div>
   );
-};
+}-
 
 export default CaptainHome;
