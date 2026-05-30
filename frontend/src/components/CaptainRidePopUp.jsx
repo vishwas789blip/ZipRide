@@ -1,8 +1,8 @@
 import React from "react";
 
-const ConfirmRide = ({ ride, onConfirm, onCancel }) => {
+const CaptainRidePopUp = ({ ride, onConfirm, onIgnore }) => {
   const {
-    riderName = "Harshi Pateliya",
+    riderName = "Harsh Patel",
     distance = "2.2 KM",
     pickup = {
       address: "562/11-A",
@@ -24,18 +24,23 @@ const ConfirmRide = ({ ride, onConfirm, onCancel }) => {
     .toUpperCase();
 
   return (
-    <div className="w-full bg-white rounded-t-3xl p-5 shadow-2xl">
-
-      {/* Handle */}
+    <div className="bg-white rounded-t-3xl p-5 shadow-2xl w-full">
+      {/* Drag Handle */}
       <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5"></div>
 
-      {/* Heading */}
-      <h2 className="text-xl font-bold text-center text-gray-900 mb-5">
-        🚖 Confirm This Ride
-      </h2>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-xl font-bold text-gray-900">
+          🚕 New Ride Available
+        </h2>
 
-      {/* Rider Card */}
-      <div className="bg-yellow-400 rounded-2xl p-4 flex items-center gap-3 mb-5 relative">
+        <span className="text-sm font-semibold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+          {distance}
+        </span>
+      </div>
+
+      {/* Rider */}
+      <div className="bg-yellow-400 rounded-2xl p-4 flex items-center gap-3 mb-5">
         <div className="h-12 w-12 rounded-full bg-yellow-700 text-white flex items-center justify-center font-bold">
           {initials}
         </div>
@@ -46,30 +51,24 @@ const ConfirmRide = ({ ride, onConfirm, onCancel }) => {
           </h3>
 
           <p className="text-sm text-gray-700">
-            Passenger Ready
+            Nearby Passenger
           </p>
         </div>
 
-        <div className="text-right">
-          <p className="font-bold text-gray-900">
-            {distance}
-          </p>
-        </div>
-
-        <span className="absolute bottom-3 right-4 h-3 w-3 bg-green-500 rounded-full animate-pulse"></span>
+        <span className="font-bold text-gray-900">
+          {distance}
+        </span>
       </div>
 
       {/* Ride Details */}
-      <div className="bg-gray-50 border rounded-2xl overflow-hidden mb-5">
+      <div className="bg-gray-50 rounded-2xl overflow-hidden border mb-5">
 
         {/* Pickup */}
         <div className="flex gap-4 p-4">
-          <div className="text-green-600 text-xl">
-            📍
-          </div>
+          <div className="text-green-600 text-lg">📍</div>
 
           <div>
-            <h4 className="font-semibold text-gray-900">
+            <h4 className="font-medium text-gray-900">
               {pickup.address}
             </h4>
 
@@ -81,14 +80,12 @@ const ConfirmRide = ({ ride, onConfirm, onCancel }) => {
 
         <hr />
 
-        {/* Destination */}
+        {/* Drop */}
         <div className="flex gap-4 p-4">
-          <div className="text-red-500 text-xl">
-            🏁
-          </div>
+          <div className="text-red-500 text-lg">🏁</div>
 
           <div>
-            <h4 className="font-semibold text-gray-900">
+            <h4 className="font-medium text-gray-900">
               {dropoff.address}
             </h4>
 
@@ -102,12 +99,10 @@ const ConfirmRide = ({ ride, onConfirm, onCancel }) => {
 
         {/* Fare */}
         <div className="flex gap-4 p-4">
-          <div className="text-green-600 text-xl">
-            💰
-          </div>
+          <div className="text-green-600 text-lg">💰</div>
 
           <div>
-            <h4 className="text-lg font-bold text-gray-900">
+            <h4 className="font-bold text-lg text-gray-900">
               {fare}
             </h4>
 
@@ -116,29 +111,26 @@ const ConfirmRide = ({ ride, onConfirm, onCancel }) => {
             </p>
           </div>
         </div>
-
       </div>
 
       {/* Buttons */}
       <div className="space-y-3">
-
         <button
           onClick={onConfirm}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition-all"
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition"
         >
-          ✅ Confirm Ride
+          ✅ Accept Ride
         </button>
 
         <button
-          onClick={onCancel}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition-all"
+          onClick={onIgnore}
+          className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold transition"
         >
-          ❌ Cancel Ride
+          ❌ Ignore
         </button>
-
       </div>
     </div>
   );
 };
 
-export default ConfirmRide;
+export default CaptainRidePopUp;

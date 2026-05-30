@@ -30,7 +30,7 @@ const UserSignUp = () => {
         { fullName: { firstName, lastName }, email, password }
       );
       if (response.status === 201) {
-        setUser(response.data);
+        setUser(response.data.user);
         localStorage.setItem('token', response.data.token);
         navigate('/home');
       }

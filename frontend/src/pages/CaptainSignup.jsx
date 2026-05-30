@@ -48,7 +48,7 @@ const CaptainSignup = () => {
       if (response.status === 201) {
         setCaptain(response.data);
         localStorage.setItem('token', response.data.token);
-        navigate('/captain/home');
+        navigate('/captain-login');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');

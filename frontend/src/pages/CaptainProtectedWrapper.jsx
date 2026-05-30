@@ -1,42 +1,60 @@
-import { useEffect } from 'react';
-import { CaptainDataContext } from '../context/captainContext.jsx';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useContext } from "react";
+import { CaptainDataContext } from "../context/captainContext.jsx";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const UserProtectedWrapper = ({ children }) => {
-    const token = localStorage.getItem('token');
-    const navigate = useNavigate();
-    const [captain, setCaptain] = React.useContext(CaptainDataContext);
-    const [isLoading, setIsLoading] = React.useContext(CaptainDataContext);
+const CaptainProtectedWrapper = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!token) {
-            navigate('/captain-login');
-        }
-    }, [token, navigate]);
-    
-    axios.get(`${import.meta.env.VITE_API_URL}/captains/me`, {
+  const {
+    captain,
+    setCaptain,
+    isLoading,
+    setIsLoading,
+  } = useContext(CaptainDataContext);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/captain-login");
+      return;
+    }
+
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/captains/profile`, {
         headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    .then(res => {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
         if (res.status === 200) {
-            setCaptain(res.data.captain);
-            setIsLoading(false);
+          setCaptain(res.data.captain);
         }
-        
-    })
-    .catch(err => {
-        console.error('Failed to fetch captain data:', err.response?.data?.message || err.message);
-        localStorage.removeItem('token');
+      })
+      .catch((err) => {
+        console.error(
+          err.response?.data?.message || err.message
+        );
+
+        localStorage.removeItem("token");
+        navigate("/captain-login");
+      })
+      .finally(() => {
         setIsLoading(false);
-    });
+      });
+  }, [token, navigate, setCaptain, setIsLoading]);
 
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-xl font-semibold">
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
-    if (!token) return null; 
-    
-    return <>{children}</>;
+  return <>{children}</>;
 };
 
-export default UserProtectedWrapper;
+export default CaptainProtectedWrapper;

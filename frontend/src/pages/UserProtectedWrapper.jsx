@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { UserDataContext } from '../context/userContext';
 
 const UserProtectedWrapper = ({ children }) => {
-    const token = localStorage.getItem('user'); 
+    const token = localStorage.getItem('token'); 
     const navigate = useNavigate();
     const { setUser } = useContext(UserDataContext); 
 
     useEffect(() => {
         if (!token) {
-            navigate('/login');
+            navigate('/Home');
             return;
         }
 
@@ -26,11 +26,11 @@ const UserProtectedWrapper = ({ children }) => {
         })
         .catch(err => {
             console.error('Failed to fetch user data:', err.message);
-            localStorage.removeItem('user'); 
+            localStorage.removeItem('token'); 
             navigate('/login');
         });
 
-    }, [token, navigate]); 
+    }, []); 
 
     if (!token) return null;
 

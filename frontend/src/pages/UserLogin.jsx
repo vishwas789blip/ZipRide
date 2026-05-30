@@ -23,8 +23,8 @@ export default function UserLogin() {
         { email, password }
       );
       if (response.status === 200) {
-        setUser(response.data);
-        localStorage.setItem('user', response.data.token);
+        setUser(response.data.user);
+        localStorage.setItem('token', response.data.token);
         setEmail('');
         setPassword('');
         navigate('/home');
